@@ -186,6 +186,17 @@ SELECT rating, AVG(replacement_cost) FROM film GROUP BY rating ORDER BY AVG(repl
 SELECT * FROM payment;
 SELECT customer_id, SUM(amount) FROM payment GROUP BY customer_id HAVING SUM(amount) > 200 ORDER BY SUM(amount) DESC ;
 
+/*
+	More than or equals 40 transaction customers
+*/
+
+SELECT customer_id, COUNT(amount) FROM payment GROUP BY customer_id HAVING COUNT(amount) >= 40;
+
+/*
+	Customer ids with more than 100$ in transaction with staff 2
+*/ 
+SELECT customer_id, SUM(amount) FROM payment WHERE staff_id = 2 GROUP BY customer_id HAVING SUM(amount) > 100;
+
 
 
 

@@ -19,12 +19,12 @@ SELECT phone FROM address WHERE address = '259 Ipoh Drive';
 SELECT rental_duration, title, description FROM film ORDER BY rental_duration, title;
 
 /*
-ORDER BY CAN BE APPLIED TO MORE THAN ONE FIELD AND ORDERS CAN ALSO BE CHANGED
+	ORDER BY CAN BE APPLIED TO MORE THAN ONE FIELD AND ORDERS CAN ALSO BE CHANGED
 */
 SELECT rental_duration, title, description FROM film ORDER BY rental_duration DESC, title ASC;
 
 /*
-Last 5 payment transactions
+	Last 5 payment transactions
 */
 SELECT * FROM payment WHERE amount > 0 ORDER BY payment_date DESC LIMIT 5;
 
@@ -35,12 +35,12 @@ SELECT title FROM film ORDER BY length LIMIT 5;
 SELECT count(*) FROM film WHERE length <= 50;
 
 /*
-10 AND 30 IS INCLUSIVE
+	10 AND 30 IS INCLUSIVE
 */
 SELECT * FROM film WHERE film_id BETWEEN 10 AND 30;
 
 /*
-10 AND 30 IS EXCLUSIVE
+	10 AND 30 IS EXCLUSIVE
 */
 SELECT * FROM film WHERE film_id NOT BETWEEN 10 AND 30 ORDER BY film_id ASC;
 
@@ -73,13 +73,13 @@ SELECT * FROM customer WHERE first_name IN('Jake', 'John', 'Julie');
 */
 
 /*
-First name starts with J
+	First name starts with J
 */
 SELECT * FROM customer WHERE first_name LIKE 'J%';
 SELECT * FROM customer WHERE first_name LIKE 'J%' AND last_name LIKE 'S%';
 SELECT * FROM customer WHERE first_name LIKE '%er%';
 /*
-Starts with any char, has her as 2nd, 3rd and 4th characters and has any characters after that
+	Starts with any char, has her as 2nd, 3rd and 4th characters and has any characters after that
 */
 SELECT * FROM customer WHERE first_name LIKE '_her%';
 SELECT * FROM customer WHERE first_name NOT LIKE '_her%';
@@ -94,16 +94,16 @@ SELECT DISTINCT district FROM address;
 SELECT COUNT(*) FROM film WHERE rating = 'R' AND replacement_cost BETWEEN 5.00 AND 10.00;
 
 /*
-The main idea behind aggregate functions is to take multiple inputs and produce a single output 
-Common aggregate functions
---------------------------
-	AVG() - gives floating point output use ROUND() to round it off
-	COUNT()
-	MAX()
-	MIN()
-	SUM()
+	The main idea behind aggregate functions is to take multiple inputs and produce a single output 
+	Common aggregate functions
+	--------------------------
+		AVG() - gives floating point output use ROUND() to round it off
+		COUNT()
+		MAX()
+		MIN()
+		SUM()
 	
-Aggregate function calls can only happen during WHERE clause or HAVING clause
+	Aggregate function calls can only happen during WHERE clause or HAVING clause
 */
 
 SELECT MIN(replacement_cost) FROM film;
@@ -114,20 +114,20 @@ SELECT ROUND(AVG(replacement_cost), 3) FROM film;
 
 
 /*
-Inorder to use more than one columns on this agg function we need to use GROUP BY statement
+	Inorder to use more than one columns on this agg function we need to use GROUP BY statement
 
-SELECT category_col, AGG(data_col) FROM table_name GROUP BY category_col
+	SELECT category_col, AGG(data_col) FROM table_name GROUP BY category_col
 
-GROUP BY must come after FROM or WHERE clause
-Of all columns mentioned after select statement the ones without agg fucntions must be mentioned after GROUP BY as well
+	GROUP BY must come after FROM or WHERE clause
+	Of all columns mentioned after select statement the ones without agg fucntions must be mentioned after GROUP BY as well
 
-SELECT company, division, SUM(sales) FROM finance_table GROUP BY company, division;
-SELECT company, division, SUM(sales) FROM finance_table WHERE division IN('marketing', 'transport') GROUP BY company, division;
+	SELECT company, division, SUM(sales) FROM finance_table GROUP BY company, division;
+	SELECT company, division, SUM(sales) FROM finance_table WHERE division IN('marketing', 'transport') GROUP BY company, division;
 
-WHERE clause cannot compare or operate on the output of agg column SUM(sales)
+	WHERE clause cannot compare or operate on the output of agg column SUM(sales)
 
-If we want to sort based on the output of agg we need to mention the total agg function
-SELECT company, division, SUM(sales) FROM finance_table GROUP BY company, division ORDER BY SUM(sales);
+	If we want to sort based on the output of agg we need to mention the total agg function
+	SELECT company, division, SUM(sales) FROM finance_table GROUP BY company, division ORDER BY SUM(sales);
 */
 
 /*
@@ -171,6 +171,20 @@ SELECT staff_id, COUNT(amount) FROM payment WHERE staff_id IN(1, 2) GROUP BY sta
 	Avg replacement cost per movie rating
 */
 SELECT rating, AVG(replacement_cost) FROM film GROUP BY rating ORDER BY AVG(replacement_cost) DESC;
+
+/*
+	HAVING clause allows us to filter after an agg has taken place, so it comes after GROUP BY
+	
+	SELECT company, division, SUM(sales) FROM finance_table WHERE division IN('marketing', 'transport') GROUP BY company, division;
+	
+	In above mentioned query we filtered division, since its not a column under agg function, but SUM(sales) column that we are selecting 
+	forms only after the GROUP BY clause is executed, so filtering based on the SUM(sales) column should happen after GROUP BY and we use 
+	HAVING clause for it.
+	
+	SELECT company, division, SUM(sales) FROM finance_table WHERE division IN('marketing', 'transport') GROUP BY company, division HAVING SUM(sales) > 1000;
+*/
+SELECT * FROM payment;
+SELECT customer_id, SUM(amount) FROM payment GROUP BY customer_id HAVING SUM(amount) > 200 ORDER BY SUM(amount) DESC ;
 
 
 
